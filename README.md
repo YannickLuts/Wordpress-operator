@@ -39,8 +39,8 @@ spec:
   size: "Small" #Size specifies the resources for each deployment -- Small, Medium, Large
   tier: "Bronze" #This helps specify the replicas -- Bronze, Silver, Gold
   wordpressInfo:
-    title: "Stagingphase"
-    url: "wordpress-cluster.google.gluo.cloud"
+    title: "Title"
+    url: "example.com"
 ```
 ## TODO
  - Currently the scaling doesn't work properly. I assume that this is a issue in the code.

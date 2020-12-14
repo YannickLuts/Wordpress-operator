@@ -1,7 +1,7 @@
 # Wordpress-operator
 
 This wordpress-operator aims to provide a simple way of deploying a wordpress environment inside your Kubernetes cluster.
-
+It was a project for an Internship and now the operator is open source.
 
 # Goals
 The goals of this operator are:
@@ -42,3 +42,5 @@ spec:
     title: "Stagingphase"
     url: "wordpress-cluster.google.gluo.cloud"
 ```
+## TODO
+ - Currently the scaling doesn't work properly. I assume that this is a issue in the code.

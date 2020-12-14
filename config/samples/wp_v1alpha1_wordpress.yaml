@@ -1,0 +1,6 @@
+apiVersion: wp.gluo.be/v1alpha1
+kind: Wordpress
+metadata:
+  name: wordpress-sample
+spec:
+  tier: "Bronze"

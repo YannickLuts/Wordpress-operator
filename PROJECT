@@ -1,0 +1,11 @@
+domain: gluo.be
+layout: go.kubebuilder.io/v2
+projectName: workspace
+repo: gluo.be
+resources:
+- group: wp
+  kind: Wordpress
+  version: v1alpha1
+version: 3-alpha
+plugins:
+  go.sdk.operatorframework.io/v2-alpha: {}

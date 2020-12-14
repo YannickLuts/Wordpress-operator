@@ -1,0 +1,13 @@
+#* Client service for connecting to any MySQL instance for reads
+#* For writes, you must instead connect to the master
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-read-service
+  labels:
+    app: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+    - port: 3306

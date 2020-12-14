@@ -1,0 +1,126 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.3.0
+  creationTimestamp: null
+  name: wordpresses.wp.gluo.be
+spec:
+  group: wp.gluo.be
+  names:
+    kind: Wordpress
+    listKind: WordpressList
+    plural: wordpresses
+    singular: wordpress
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - format: byte
+      jsonPath: .status.URL
+      name: URL
+      type: string
+    - jsonPath: .status.password
+      name: Password
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Wordpress is the Schema for the wordpresses API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: WordpressSpec defines the desired state of Wordpress
+            properties:
+              size:
+                default: Small
+                description: Represents the size of the MySQL and Wordpress deployments
+                enum:
+                - Small
+                - Medium
+                - Large
+                type: string
+              state:
+                default: Archived
+                description: Define weither or not the state should be active or archived
+                enum:
+                - Active
+                - Archived
+                type: string
+              tier:
+                default: Bronze
+                description: Tiers specify the required amount of resource that need
+                  to be bound to each pod -- Cpu / Memory
+                enum:
+                - Bronze
+                - Silver
+                - Gold
+                type: string
+              wordpressInfo:
+                description: Here you can specify the Wordpress title,Admin email,
+                  Admin user, Admin password, Site URL -- Make sure to not leave the
+                  password as specified, this is just a way of setting a password
+                  for a first login.
+                properties:
+                  email:
+                    default: yannick.luts@hotmail.com
+                    description: Defines the Admin's Email
+                    type: string
+                  password:
+                    default: ""
+                    description: Defines the Admin password, If not set, a password
+                      will be generated
+                    type: string
+                  title:
+                    default: Default
+                    description: The title of the Wordpress site
+                    type: string
+                  url:
+                    default: example.com
+                    description: Defines the Wordpress URL
+                    type: string
+                  user:
+                    default: Admin
+                    description: Defines the Admin user
+                    type: string
+                type: object
+            required:
+            - size
+            - state
+            - tier
+            type: object
+          status:
+            description: WordpressStatus defines the observed state of Wordpress
+            properties:
+              URL:
+                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                  of cluster Important: Run "make" to regenerate code after modifying
+                  this file URL om naar te connecten'
+                type: string
+              password:
+                description: Generated Password for wordpress
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

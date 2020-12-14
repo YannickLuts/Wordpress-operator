@@ -515,6 +515,9 @@ elif [[ -f xtrabackup_binlog_info ]]; then` +
 			Namespace: w.Namespace,
 		},
 		Spec: appsv1.StatefulSetSpec{
+			UpdateStrategy: appsv1.StatefulSetUpdateStrategy{
+				Type: appsv1.RollingUpdateStatefulSetStrategyType,
+			},
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{"app": "mysql"},
 			},
@@ -675,7 +678,7 @@ func (r *WordpressReconciler) CreateWordpress(w *v1alpha1.Wordpress, s *corev1.S
 		},
 		Spec: appsv1.DeploymentSpec{
 			Strategy: appsv1.DeploymentStrategy{
-				Type: appsv1.RecreateDeploymentStrategyType,
+				Type: appsv1.RollingUpdateDeploymentStrategyType,
 			},
 			Replicas: &replicas,
 			Selector: &metav1.LabelSelector{
@@ -740,9 +743,9 @@ func (r *WordpressReconciler) CreateIssuer(w *v1alpha1.Wordpress) *cert.Issuer {
 		Spec: cert.IssuerSpec{
 			IssuerConfig: cert.IssuerConfig{
 				ACME: &acme.ACMEIssuer{
-					Email:  "yannick.luts@hotmail.com",
-					Server: "https://acme-staging-v02.api.letsencrypt.org/directory", // INFO Staging Server, to test wether or not cert-manager is working
-					//Server: "https://acme-v02.api.letsencrypt.org/directory", // INFO Production Server, This has rate limits.
+					Email: "yannick.luts@hotmail.com",
+					//Server: "https://acme-staging-v02.api.letsencrypt.org/directory", // INFO Staging Server, to test wether or not cert-manager is working
+					Server: "https://acme-v02.api.letsencrypt.org/directory", // INFO Production Server, This has rate limits.
 					PrivateKey: certmetav1.SecretKeySelector{
 						LocalObjectReference: certmetav1.LocalObjectReference{
 							Name: "letsencrypt-staging",

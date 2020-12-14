@@ -43,4 +43,4 @@ spec:
     url: "example.com"
 ```
 ## TODO
- - Currently the scaling doesn't work properly. I assume that this is a issue in the code.
+ - Make it so that the user has to input his email.

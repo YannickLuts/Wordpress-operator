@@ -12,9 +12,13 @@ The goals of this operator are:
  - A preinstalled wordpress
 
 ## Installation
-Currently the installation is done by downloading the source code and using the Makefile to deploy the operator locally  
+Currently the installation is done by downloading the source code and using the Makefile to deploy the operator locally.
 
-This command will install the CRDs into the Kubernetes cluster.
+```bash
+git clone https://github.com/YannickLuts/Wordpress-operator
+```
+When the repo has been cloned, you can install the Operator into you cluster.
+This command will install the CRDs into the Kubernetes cluster:
 ```bash
 make install
 ```
@@ -29,8 +33,12 @@ Creating a custom Wordpress resource is very simple.
 apiVersion: wp.gluo.be/v1alpha1
 kind: Wordpress
 metadata:
- name: test-sample
+  name: staging-sample
 spec:
- tier: "Bronze" #Provide the tier -> controls the amount of replicas
- size: "Small" #Provide the size of the deployment -> controls the amount of resources
+  state: "Active" #State determines weither or not the current operator should run resources -- If archived, every resources is created but replicas will be set to 0
+  size: "Small" #Size specifies the resources for each deployment -- Small, Medium, Large
+  tier: "Bronze" #This helps specify the replicas -- Bronze, Silver, Gold
+  wordpressInfo:
+    title: "Stagingphase"
+    url: "wordpress-cluster.google.gluo.cloud"
 ```

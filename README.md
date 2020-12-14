@@ -6,7 +6,7 @@ It was a project for an Internship and now the operator is open source.
 # Goals
 The goals of this operator are:
 
- - Create a scaleable, highly available, mysql-deployment connected to the wordpress
+ - Create a scalable, highly available, mysql-deployment connected to the wordpress
  - Create a NFS to share the worpress files over all deployments
  - Create a wordpress deployment which can scale into different tiers
  - A preinstalled wordpress

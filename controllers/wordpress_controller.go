@@ -288,12 +288,12 @@ func (r *WordpressReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 		case "small":
 			log.Info("Size is set to Small")
 			mysqlStatefulSet.Spec.Template.Spec.Containers[0].Resources = corev1.ResourceRequirements{ // Change the Resources for the MySQL Statefulset
-				Requests: corev1.ResourceList{"cpu": resource.MustParse("0.2"), "memory": resource.MustParse("200Mi")},
+				Requests: corev1.ResourceList{"cpu": resource.MustParse("1"), "memory": resource.MustParse("1Gi")},
 				Limits:   corev1.ResourceList{"cpu": resource.MustParse("1"), "memory": resource.MustParse("1Gi")},
 			}
 			r.Update(ctx, mysqlStatefulSet)                                                               // Update the MySQL Statefulset
 			wordpressDeployment.Spec.Template.Spec.Containers[0].Resources = corev1.ResourceRequirements{ // Change the Resources for the Wordpress Deployment
-				Requests: corev1.ResourceList{"cpu": resource.MustParse("0.1"), "memory": resource.MustParse("100Mi")},
+				Requests: corev1.ResourceList{"cpu": resource.MustParse("0.5"), "memory": resource.MustParse("512Mi")},
 				Limits:   corev1.ResourceList{"cpu": resource.MustParse("0.5"), "memory": resource.MustParse("512Mi")},
 			}
 			r.Update(ctx, wordpressDeployment) // Update the wordpress Deployment

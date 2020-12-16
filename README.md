@@ -2,8 +2,9 @@
 
 ![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/yannickl/wordpress-operator/latest?logo=Docker&logoColor=white&style=for-the-badge)
 
-This wordpress-operator aims to provide a simple way of deploying a wordpress environment inside your Kubernetes cluster.
+This Wordpress operator aims to provide a simple way of deploying a wordpress environment inside your Kubernetes cluster.
 It was a project for my internship and now the operator is open source.
+It deploys a frontend Wordpress with a highly available MySQL and a NFS server. It also includes cert-manager to generate SSL certificates for you Wordpress website.
 
 **❗ Currently this operator only works on GKE ❗**
 

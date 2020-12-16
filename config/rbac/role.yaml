@@ -7,6 +7,15 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
+  - apiregistration.k8s.io
+  resources:
+  - apiservices
+  verbs:
+  - get
+  - list
+  - update
+  - watch
+- apiGroups:
   - apps
   resources:
   - deployments
@@ -20,7 +29,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - cert-manager.io/v1
+  - cert-manager.io
   resources:
   - certificates
   - clusterissuers
@@ -44,6 +53,19 @@ rules:
   - services
   verbs:
   - '*'
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingressclasses
+  - ingresses
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
 - apiGroups:
   - wp.gluo.be
   resources:

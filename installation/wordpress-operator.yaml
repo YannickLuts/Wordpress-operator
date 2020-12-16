@@ -27,7 +27,7 @@ spec:
         - /manager
         args:
         - --enable-leader-election
-        image: yannickl/wordpress-operator:v1.0.1
+        image: yannickl/wordpress-operator:latest
         name: manager
         resources:
           limits:
@@ -26614,12 +26614,22 @@ webhooks:
   sideEffects: None
   timeoutSeconds: 10
 ---
+# Manager role
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   creationTimestamp: null
   name: manager-role
 rules:
+- apiGroups:
+  - apiregistration.k8s.io
+  resources:
+  - apiservices
+  verbs:
+  - get
+  - list
+  - update
+  - watch
 - apiGroups:
   - apps
   resources:
@@ -26634,7 +26644,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - cert-manager.io/v1
+  - cert-manager.io
   resources:
   - certificates
   - clusterissuers
@@ -26658,6 +26668,19 @@ rules:
   - services
   verbs:
   - '*'
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingressclasses
+  - ingresses
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
 - apiGroups:
   - wp.gluo.be
   resources:

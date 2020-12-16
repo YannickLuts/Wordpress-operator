@@ -1,7 +1,12 @@
 # Wordpress-operator
 
+**❗Currently this operator only works on GKE**
+
 This wordpress-operator aims to provide a simple way of deploying a wordpress environment inside your Kubernetes cluster.
-It was a project for an Internship and now the operator is open source.
+It was a project for my internship and now the operator is open source.
+
+
+**Keep in mind: This operator creates a NFS running inside your kubernetes cluster. It will automatically link with a GCE Persistent Disk. This means that if you download the source code, you won't be able to run the operator locally without changing the `VolumeSource` within the `CreateNFSdeployment` function.**
 
 # Goals
 The goals of this operator are:
@@ -22,7 +27,6 @@ Before installing, make sure that your cluster has enough resources to run the o
 | Medium | 1 CPU | 1Gb    |
 | Large  | 1 CPU | 1GB    |
 
-&nbsp;
 ## Wordpress
 | Size   | CPU   | Memory |
 |:------:|:-----:|:------:|
@@ -30,22 +34,19 @@ Before installing, make sure that your cluster has enough resources to run the o
 | Medium | 1 CPU | 1Gb    |
 | Large  | 2 CPU | 2GB    |
 
-&nbsp;
+Next you should make sure that you have the following things setup:
+
+- GCE Persistent Disk with the name: **nfs-server-disk**
+- install the nginx-ingress intro you cluster `helm install nginx-ingress nginx-stable/nginx-ingress`
+
+
 ## Installation
-Currently the installation is done by downloading the source code and using the Makefile to deploy the operator locally.
+To install this Wordpress operator into your cluster slimply run the following command in your console.
 
 ```bash
-git clone https://github.com/YannickLuts/Wordpress-operator
+kubectl apply -f https://raw.githubusercontent.com/YannickLuts/Wordpress-operator/master/installation/wordpress-operator.yaml
 ```
-When the repo has been cloned, you can install the Operator into you cluster.
-This command will install the CRDs into the Kubernetes cluster:
-```bash
-make install
-```
-This command will run the Kubernetes operator locally.
-```bash
-make run
-```
+
 ## Create a Wordpress resource
 Creating a custom Wordpress resource is very simple.
 

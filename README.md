@@ -1,6 +1,6 @@
 # Wordpress-operator
 
-**❗Currently this operator only works on GKE**
+**❗ Currently this operator only works on GKE ❗**
 
 This wordpress-operator aims to provide a simple way of deploying a wordpress environment inside your Kubernetes cluster.
 It was a project for my internship and now the operator is open source.

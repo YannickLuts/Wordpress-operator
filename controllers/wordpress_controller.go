@@ -61,8 +61,8 @@ var wpPassword, wpPasswordError = passGen.Generate(10, 4, 0, false, false)
 // +kubebuilder:rbac:groups=wp.gluo.be,resources=wordpresses,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=wp.gluo.be,resources=wordpresses/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=apps,resources=statefulsets;deployments,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=v1,resources=configmaps;services;secrets;persistentvolumes;persistentvolumeclaims;pods,verbs=*
 // +kubebuilder:rbac:groups=cert-manager.io/v1,resources=issuers;certificates;clusterissuers,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=core,resources=services;configmaps;secrets;persistentvolumes;persistentvolumeclaims;pods,verbs=*
 
 func (r *WordpressReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()

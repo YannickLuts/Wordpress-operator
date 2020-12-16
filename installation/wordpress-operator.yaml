@@ -27,7 +27,7 @@ spec:
         - /manager
         args:
         - --enable-leader-election
-        image: yannickl/wordpress-operator:latest
+        image: yannickl/wordpress-operator:v1.0.1
         name: manager
         resources:
           limits:
@@ -3037,7 +3037,7 @@ spec:
                             description: The IP address or hostname of an authoritative
                               DNS server supporting RFC2136 in the form host:port.
                               If the host is an IPv6 address it must be enclosed in
-                              square brackets (e.g [2001:db8::1]) ; port is optional.
+                              square brackets (e.g [2001:db8::1]) ; port is optional.
                               This field is required.
                             type: string
                           tsigAlgorithm:
@@ -4534,7 +4534,7 @@ spec:
                             description: The IP address or hostname of an authoritative
                               DNS server supporting RFC2136 in the form host:port.
                               If the host is an IPv6 address it must be enclosed in
-                              square brackets (e.g [2001:db8::1]) ; port is optional.
+                              square brackets (e.g [2001:db8::1]) ; port is optional.
                               This field is required.
                             type: string
                           tsigAlgorithm:
@@ -6031,7 +6031,7 @@ spec:
                             description: The IP address or hostname of an authoritative
                               DNS server supporting RFC2136 in the form host:port.
                               If the host is an IPv6 address it must be enclosed in
-                              square brackets (e.g [2001:db8::1]) ; port is optional.
+                              square brackets (e.g [2001:db8::1]) ; port is optional.
                               This field is required.
                             type: string
                           tsigAlgorithm:
@@ -7528,7 +7528,7 @@ spec:
                             description: The IP address or hostname of an authoritative
                               DNS server supporting RFC2136 in the form host:port.
                               If the host is an IPv6 address it must be enclosed in
-                              square brackets (e.g [2001:db8::1]) ; port is optional.
+                              square brackets (e.g [2001:db8::1]) ; port is optional.
                               This field is required.
                             type: string
                           tsigAlgorithm:
@@ -9158,7 +9158,7 @@ spec:
                                   description: The IP address or hostname of an authoritative
                                     DNS server supporting RFC2136 in the form host:port.
                                     If the host is an IPv6 address it must be enclosed
-                                    in square brackets (e.g [2001:db8::1]) ; port
+                                    in square brackets (e.g [2001:db8::1]) ; port
                                     is optional. This field is required.
                                   type: string
                                 tsigAlgorithm:
@@ -11137,7 +11137,7 @@ spec:
                                   description: The IP address or hostname of an authoritative
                                     DNS server supporting RFC2136 in the form host:port.
                                     If the host is an IPv6 address it must be enclosed
-                                    in square brackets (e.g [2001:db8::1]) ; port
+                                    in square brackets (e.g [2001:db8::1]) ; port
                                     is optional. This field is required.
                                   type: string
                                 tsigAlgorithm:
@@ -13116,7 +13116,7 @@ spec:
                                   description: The IP address or hostname of an authoritative
                                     DNS server supporting RFC2136 in the form host:port.
                                     If the host is an IPv6 address it must be enclosed
-                                    in square brackets (e.g [2001:db8::1]) ; port
+                                    in square brackets (e.g [2001:db8::1]) ; port
                                     is optional. This field is required.
                                   type: string
                                 tsigAlgorithm:
@@ -15097,7 +15097,7 @@ spec:
                                   description: The IP address or hostname of an authoritative
                                     DNS server supporting RFC2136 in the form host:port.
                                     If the host is an IPv6 address it must be enclosed
-                                    in square brackets (e.g [2001:db8::1]) ; port
+                                    in square brackets (e.g [2001:db8::1]) ; port
                                     is optional. This field is required.
                                   type: string
                                 tsigAlgorithm:
@@ -17114,7 +17114,7 @@ spec:
                                   description: The IP address or hostname of an authoritative
                                     DNS server supporting RFC2136 in the form host:port.
                                     If the host is an IPv6 address it must be enclosed
-                                    in square brackets (e.g [2001:db8::1]) ; port
+                                    in square brackets (e.g [2001:db8::1]) ; port
                                     is optional. This field is required.
                                   type: string
                                 tsigAlgorithm:
@@ -19092,7 +19092,7 @@ spec:
                                   description: The IP address or hostname of an authoritative
                                     DNS server supporting RFC2136 in the form host:port.
                                     If the host is an IPv6 address it must be enclosed
-                                    in square brackets (e.g [2001:db8::1]) ; port
+                                    in square brackets (e.g [2001:db8::1]) ; port
                                     is optional. This field is required.
                                   type: string
                                 tsigAlgorithm:
@@ -21070,7 +21070,7 @@ spec:
                                   description: The IP address or hostname of an authoritative
                                     DNS server supporting RFC2136 in the form host:port.
                                     If the host is an IPv6 address it must be enclosed
-                                    in square brackets (e.g [2001:db8::1]) ; port
+                                    in square brackets (e.g [2001:db8::1]) ; port
                                     is optional. This field is required.
                                   type: string
                                 tsigAlgorithm:
@@ -23050,7 +23050,7 @@ spec:
                                   description: The IP address or hostname of an authoritative
                                     DNS server supporting RFC2136 in the form host:port.
                                     If the host is an IPv6 address it must be enclosed
-                                    in square brackets (e.g [2001:db8::1]) ; port
+                                    in square brackets (e.g [2001:db8::1]) ; port
                                     is optional. This field is required.
                                   type: string
                                 tsigAlgorithm:
@@ -26614,7 +26614,6 @@ webhooks:
   sideEffects: None
   timeoutSeconds: 10
 ---
-# Manager-Role
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -26649,7 +26648,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - v1
+  - ""
   resources:
   - configmaps
   - persistentvolumeclaims
@@ -26789,6 +26788,3 @@ metadata:
 rules:
 - nonResourceURLs: ["/metrics"]
   verbs: ["get"]
-
-
-

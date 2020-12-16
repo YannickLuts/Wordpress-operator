@@ -1,5 +1,7 @@
 # Wordpress-operator
 
+![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/yannickl/wordpress-operator/latest?logo=Docker&logoColor=white&style=for-the-badge)
+
 **❗ Currently this operator only works on GKE ❗**
 
 This wordpress-operator aims to provide a simple way of deploying a wordpress environment inside your Kubernetes cluster.

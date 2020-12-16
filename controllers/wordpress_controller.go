@@ -708,7 +708,6 @@ func (r *WordpressReconciler) CreateWordpress(w *v1alpha1.Wordpress, s *corev1.S
 										"bash",
 										"-c",
 										"wp core install --url=" + url + " --title=" + title + " --admin_user=" + admin + " --admin_email=" + adminEmail + " --admin_password=" + adminPass,
-										// ? Command might not work
 									},
 								},
 							},

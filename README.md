@@ -2,11 +2,10 @@
 
 ![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/yannickl/wordpress-operator/latest?logo=Docker&logoColor=white&style=for-the-badge)
 
-**❗ Currently this operator only works on GKE ❗**
-
 This wordpress-operator aims to provide a simple way of deploying a wordpress environment inside your Kubernetes cluster.
 It was a project for my internship and now the operator is open source.
 
+**❗ Currently this operator only works on GKE ❗**
 
 **Keep in mind: This operator creates a NFS running inside your kubernetes cluster. It will automatically link with a GCE Persistent Disk. This means that if you download the source code, you won't be able to run the operator locally without changing the `VolumeSource` within the `CreateNFSdeployment` function.**
 
@@ -56,14 +55,15 @@ Creating a custom Wordpress resource is very simple.
 apiVersion: wp.gluo.be/v1alpha1
 kind: Wordpress
 metadata:
-  name: staging-sample
+  name: example
 spec:
   state: "Active" #State determines weither or not the current operator should run resources -- If archived, every resources is created but replicas will be set to 0
   size: "Small" #Size specifies the resources for each deployment -- Small, Medium, Large
   tier: "Bronze" #This helps specify the replicas -- Bronze, Silver, Gold
   wordpressInfo:
-    title: "Title"
-    url: "example.com"
+    email: "example@example.com" # REQUIRED
+    title: "Title" #Optional
+    url: "example.com" #Optional
+    user: #optional
+    password: #optional -> When empty a password will be generated
 ```
-## TODO
- - Make it so that the user has to input his email.

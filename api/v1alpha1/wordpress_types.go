@@ -38,7 +38,6 @@ type WordpressSpec struct {
 	// +kubebuilder:default="Bronze"
 	Tier string `json:"tier"`
 	// Here you can specify the Wordpress title,Admin email, Admin user, Admin password, Site URL -- Make sure to not leave the password as specified, this is just a way of setting a password for a first login.
-	// +optional
 	WordpressInfo WordpressInfoSpec `json:"wordpressInfo"`
 }
 
@@ -61,9 +60,7 @@ type WordpressInfoSpec struct {
 	// +kubebuilder:default=""
 	// +optional
 	AdminPass string `json:"password"`
-	// Defines the Admin's Email
-	// +kubebuilder:default="yannick.luts@hotmail.com"
-	// +optional
+	// Defines the Admin's Email. This must be set to the administrators email
 	AdminEmail string `json:"email"`
 }
 

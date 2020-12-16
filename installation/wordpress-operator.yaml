@@ -115,8 +115,8 @@ spec:
                   for a first login.
                 properties:
                   email:
-                    default: yannick.luts@hotmail.com
-                    description: Defines the Admin's Email
+                    description: Defines the Admin's Email. This must be set to the
+                      administrators email
                     type: string
                   password:
                     default: ""
@@ -135,11 +135,14 @@ spec:
                     default: Admin
                     description: Defines the Admin user
                     type: string
+                required:
+                - email
                 type: object
             required:
             - size
             - state
             - tier
+            - wordpressInfo
             type: object
           status:
             description: WordpressStatus defines the observed state of Wordpress

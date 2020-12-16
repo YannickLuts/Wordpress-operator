@@ -10,7 +10,27 @@ The goals of this operator are:
  - Create a NFS to share the worpress files over all deployments
  - Create a wordpress deployment which can scale into different tiers
  - A preinstalled wordpress
+ 
 
+# Prerequisite
+Before installing, make sure that your cluster has enough resources to run the operator. Check the table below to have a clear view of what the required resources are for each size that can be specified.
+
+## MySQL
+| Size   | CPU   | Memory |
+|:------:|:-----:|:------:|
+| Small  | 1 CPU | 1Gb    |
+| Medium | 1 CPU | 1Gb    |
+| Large  | 1 CPU | 1GB    |
+
+&nbsp;
+## Wordpress
+| Size   | CPU   | Memory |
+|:------:|:-----:|:------:|
+| Small  | 0.5   | 512Mb  |
+| Medium | 1 CPU | 1Gb    |
+| Large  | 2 CPU | 2GB    |
+
+&nbsp;
 ## Installation
 Currently the installation is done by downloading the source code and using the Makefile to deploy the operator locally.
 

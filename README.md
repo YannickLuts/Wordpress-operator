@@ -1,6 +1,7 @@
 # Wordpress-operator
 
-<a href="https://hub.docker.com/repository/docker/yannickl/wordpress-operator"><img alt="Docker Image Version (tag latest semver)" src="https://img.shields.io/docker/v/yannickl/wordpress-operator/latest?logo=Docker&logoColor=white&style=for-the-badge"></a> ![GitHub top language](https://img.shields.io/github/languages/top/yannickluts/wordpress-operator?color=blueviolet&logo=go&style=for-the-badge)
+<a href="https://hub.docker.com/repository/docker/yannickl/wordpress-operator"><img alt="Docker Image Version (tag latest semver)" src="https://img.shields.io/docker/v/yannickl/wordpress-operator/latest?logo=Docker&logoColor=white&style=for-the-badge"></a> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![GitHub top language](https://img.shields.io/github/languages/top/yannickluts/wordpress-operator?color=blueviolet&logo=go&style=for-the-badge)
 
 This Wordpress operator aims to provide a simple way of deploying a wordpress environment inside your Kubernetes cluster.
 It was a project for my internship and now the operator is open source.

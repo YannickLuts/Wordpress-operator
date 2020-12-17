@@ -73,3 +73,6 @@ spec:
     user: #optional
     password: #optional -> When empty a password will be generated
 ```
+## Uninstallation
+
+Before uninstalling a wordpress resource or the operator please put the `state:` into `Archived` to prevent data loss.

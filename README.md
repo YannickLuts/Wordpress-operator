@@ -43,7 +43,12 @@ Next you should make sure that you have the following things setup:
 
 
 ## Installation
-To install this Wordpress operator into your cluster slimply run the following command in your console.
+To install this Wordpress operator into your cluster slimply run the following commands in your console.
+
+First install the Nginx Ingress controller
+```bash
+helm install nginx-ingress nginx-stable/nginx-ingress
+```
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/YannickLuts/Wordpress-operator/master/installation/wordpress-operator.yaml

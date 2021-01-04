@@ -875,8 +875,9 @@ func (r *WordpressReconciler) CreateNFSPersistentVolume(w *v1alpha1.Wordpress) *
 			StorageClassName: "",
 			PersistentVolumeSource: corev1.PersistentVolumeSource{
 				NFS: &corev1.NFSVolumeSource{
-					Server: w.Name + "-nfs-server.default.svc.cluster.local",
-					Path:   "/",
+					Server: w.Name + "-nfs-server." + w.Namespace + ".svc.cluster.local", // ! Not sure if this works
+					//Server: w.Name + "-nfs-server.default.svc.cluster.local", //Current namespace opvragen
+					Path: "/",
 				},
 			},
 		},

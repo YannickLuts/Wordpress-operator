@@ -284,6 +284,12 @@ func (r *WordpressReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	case "active":
 		log.Info("State is currently: ACTIVE")
 		size := strings.ToLower(wordpress.Spec.Size)
+
+		if *nfsDeployment.Spec.Replicas == 0 {
+			*nfsDeployment.Spec.Replicas = 1
+			r.Update(ctx, nfsDeployment)
+		}
+
 		switch size {
 		case "small":
 			log.Info("Size is set to Small")

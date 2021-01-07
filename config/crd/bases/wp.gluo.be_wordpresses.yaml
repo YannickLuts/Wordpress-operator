@@ -70,9 +70,7 @@ spec:
                 type: string
               wordpressInfo:
                 description: Here you can specify the Wordpress title,Admin email,
-                  Admin user, Admin password, Site URL -- Make sure to not leave the
-                  password as specified, this is just a way of setting a password
-                  for a first login.
+                  Admin user, Admin password, Site URL
                 properties:
                   email:
                     description: Defines the Admin's Email. This must be set to the

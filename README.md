@@ -79,8 +79,8 @@ spec:
 Before uninstalling a wordpress resource or the operator please put the `state:` into `Archived` to prevent data loss.
 
 ## Todo
-[ ] In archived state, scale the nfs down to 0
+[x] In archived state, scale the nfs down to 0
 
 [x] Make the operator run in every namespace and not only the default one. (Should by changing the NFS Server to the current namespace.
 
-[ ] Update deinstallation by just deleting the namespace the operator is running in.
+[x] Update deinstallation by just deleting the namespace the operator is running in.

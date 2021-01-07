@@ -353,10 +353,13 @@ func (r *WordpressReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 		}
 	case "archived":
 		log.Info("State is currently: ARCHIVED")
-		*mysqlStatefulSet.Spec.Replicas = 0
+		*mysqlStatefulSet.Spec.Replicas = 0 //Set replicas of the MySQL Statefulset to 0
 		r.Update(ctx, mysqlStatefulSet)
-		*wordpressDeployment.Spec.Replicas = 0
+		*wordpressDeployment.Spec.Replicas = 0 //Set replicas of the Wordpress Deployment to 0
 		r.Update(ctx, wordpressDeployment)
+		*nfsDeployment.Spec.Replicas = 0 //Set replicas of the NFS Deployment to 0
+		r.Update(ctx, nfsDeployment)
+
 	}
 
 	// Update the URL status
@@ -408,7 +411,7 @@ func (r *WordpressReconciler) CreateMySQLConfigMap(w *wpv1alpha1.Wordpress) *cor
 			Name:      w.Name + "-mysql-configmap",
 			Namespace: w.Namespace,
 			Labels:    map[string]string{"app": "mysql"},
-		}, Data: map[string]string{"master.cnf": "[mysqld]\nlog-bin", "slave.cnf": "[mysqld]\nsuper-read-only"}, //Schrijffout bij slave -> ik had eerst Slafe *INsert facepalm*
+		}, Data: map[string]string{"master.cnf": "[mysqld]\nlog-bin", "slave.cnf": "[mysqld]\nsuper-read-only"},
 	}
 	ctrl.SetControllerReference(w, cm, r.Scheme)
 	return cm
@@ -486,7 +489,7 @@ if [[ -f xtrabackup_slave_info && "x$(<xtrabackup_slave_info)" != "x" ]]; then
 cat xtrabackup_slave_info | sed -E 's/;$//g' > change_master_to.sql.in
 rm -f xtrabackup_slave_info xtrabackup_binlog_info
 elif [[ -f xtrabackup_binlog_info ]]; then` +
-		"\n[[ `cat xtrabackup_binlog_info` =~ ^(.*?)[[:space:]]+(.*?)$ ]] || exit 1\n" + //Hier zit nen error
+		"\n[[ `cat xtrabackup_binlog_info` =~ ^(.*?)[[:space:]]+(.*?)$ ]] || exit 1\n" +
 		`rm -f xtrabackup_binlog_info xtrabackup_slave_info
     echo "CHANGE MASTER TO MASTER_LOG_FILE='${BASH_REMATCH[1]}',\
     	MASTER_LOG_POS=${BASH_REMATCH[2]}" > change_master_to.sql.in

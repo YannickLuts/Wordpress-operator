@@ -27,7 +27,7 @@ spec:
         - /manager
         args:
         - --enable-leader-election
-        image: yannickl/wordpress-operator:latest
+        image: yannickl/wordpress-operator:latest-production
         name: manager
         resources:
           limits:

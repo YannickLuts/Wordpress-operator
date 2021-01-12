@@ -284,16 +284,22 @@ func (r *WordpressReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	case "active":
 		log.Info("State is currently: ACTIVE")
 		size := strings.ToLower(wordpress.Spec.Size)
+
+		if *nfsDeployment.Spec.Replicas == 0 {
+			*nfsDeployment.Spec.Replicas = 1
+			r.Update(ctx, nfsDeployment)
+		}
+
 		switch size {
 		case "small":
 			log.Info("Size is set to Small")
 			mysqlStatefulSet.Spec.Template.Spec.Containers[0].Resources = corev1.ResourceRequirements{ // Change the Resources for the MySQL Statefulset
-				Requests: corev1.ResourceList{"cpu": resource.MustParse("0.2"), "memory": resource.MustParse("200Mi")},
+				Requests: corev1.ResourceList{"cpu": resource.MustParse("1"), "memory": resource.MustParse("1Gi")},
 				Limits:   corev1.ResourceList{"cpu": resource.MustParse("1"), "memory": resource.MustParse("1Gi")},
 			}
 			r.Update(ctx, mysqlStatefulSet)                                                               // Update the MySQL Statefulset
 			wordpressDeployment.Spec.Template.Spec.Containers[0].Resources = corev1.ResourceRequirements{ // Change the Resources for the Wordpress Deployment
-				Requests: corev1.ResourceList{"cpu": resource.MustParse("0.1"), "memory": resource.MustParse("100Mi")},
+				Requests: corev1.ResourceList{"cpu": resource.MustParse("0.5"), "memory": resource.MustParse("512Mi")},
 				Limits:   corev1.ResourceList{"cpu": resource.MustParse("0.5"), "memory": resource.MustParse("512Mi")},
 			}
 			r.Update(ctx, wordpressDeployment) // Update the wordpress Deployment
@@ -357,6 +363,8 @@ func (r *WordpressReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 		r.Update(ctx, mysqlStatefulSet)
 		*wordpressDeployment.Spec.Replicas = 0
 		r.Update(ctx, wordpressDeployment)
+		*nfsDeployment.Spec.Replicas = 0 //Set replicas of the NFS Deployment to 0
+		r.Update(ctx, nfsDeployment)
 	}
 
 	// Update the URL status
@@ -742,8 +750,7 @@ func (r *WordpressReconciler) CreateIssuer(w *v1alpha1.Wordpress) *cert.Issuer {
 			IssuerConfig: cert.IssuerConfig{
 				ACME: &acme.ACMEIssuer{
 					Email:  "yannick.luts@hotmail.com",
-					Server: "https://acme-staging-v02.api.letsencrypt.org/directory", // INFO Staging Server, to test wether or not cert-manager is working
-					//Server: "https://acme-v02.api.letsencrypt.org/directory", // INFO Production Server, This has rate limits.
+					Server: "https://acme-v02.api.letsencrypt.org/directory", // INFO Production Server, This has rate limits.
 					PrivateKey: certmetav1.SecretKeySelector{
 						LocalObjectReference: certmetav1.LocalObjectReference{
 							Name: "letsencrypt-staging",
@@ -822,8 +829,8 @@ func (r *WordpressReconciler) CreateCert(w *v1alpha1.Wordpress, i *cert.Issuer) 
 			IssuerRef: certmetav1.ObjectReference{
 				Name: i.Name,
 			},
-			CommonName: "wordpress-cluster.google.gluo.cloud",
-			DNSNames:   []string{"wordpress-cluster.google.cluo.cloud"},
+			CommonName: w.Spec.WordpressInfo.URL,
+			DNSNames:   []string{w.Spec.WordpressInfo.URL},
 		},
 	}
 	ctrl.SetControllerReference(w, cert, r.Scheme)

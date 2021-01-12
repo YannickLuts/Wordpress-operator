@@ -60,11 +60,10 @@ var wpPassword, wpPasswordError = passGen.Generate(10, 4, 0, false, false)
 
 // +kubebuilder:rbac:groups=wp.gluo.be,resources=wordpresses,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=wp.gluo.be,resources=wordpresses/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=apps,resources=statefulsets;deployments,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=cert-manager.io,resources=issuers;certificates;clusterissuers,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=core,resources=services;configmaps;secrets;persistentvolumes;persistentvolumeclaims;pods,verbs=*
-// +kubebuilder:rbac:groups=networking.k8s.io,resources=ingresses;ingressclasses,verbs=create;list;update;patch;get;delete;watch
-// +kubebuilder:rbac:groups=apiregistration.k8s.io,resources=apiservices,verbs=get;list;watch;update
+// ! BELANGRIJK Voeg perms Toe!!
+// +kubebuilder:rbac:groups=core/v1,resources=configmaps;services;persistentvolumes;persistentvolumeclaims,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=apps/v1,resources=statefulsets;deployments,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=cert-manager.io/v1,resources=issuers;certificates;clusterissuers,verbs=get;list;watch;create;update;patch;delete
 
 func (r *WordpressReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
@@ -284,22 +283,16 @@ func (r *WordpressReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	case "active":
 		log.Info("State is currently: ACTIVE")
 		size := strings.ToLower(wordpress.Spec.Size)
-
-		if *nfsDeployment.Spec.Replicas == 0 {
-			*nfsDeployment.Spec.Replicas = 1
-			r.Update(ctx, nfsDeployment)
-		}
-
 		switch size {
 		case "small":
 			log.Info("Size is set to Small")
 			mysqlStatefulSet.Spec.Template.Spec.Containers[0].Resources = corev1.ResourceRequirements{ // Change the Resources for the MySQL Statefulset
-				Requests: corev1.ResourceList{"cpu": resource.MustParse("1"), "memory": resource.MustParse("1Gi")},
+				Requests: corev1.ResourceList{"cpu": resource.MustParse("0.2"), "memory": resource.MustParse("200Mi")},
 				Limits:   corev1.ResourceList{"cpu": resource.MustParse("1"), "memory": resource.MustParse("1Gi")},
 			}
 			r.Update(ctx, mysqlStatefulSet)                                                               // Update the MySQL Statefulset
 			wordpressDeployment.Spec.Template.Spec.Containers[0].Resources = corev1.ResourceRequirements{ // Change the Resources for the Wordpress Deployment
-				Requests: corev1.ResourceList{"cpu": resource.MustParse("0.5"), "memory": resource.MustParse("512Mi")},
+				Requests: corev1.ResourceList{"cpu": resource.MustParse("0.1"), "memory": resource.MustParse("100Mi")},
 				Limits:   corev1.ResourceList{"cpu": resource.MustParse("0.5"), "memory": resource.MustParse("512Mi")},
 			}
 			r.Update(ctx, wordpressDeployment) // Update the wordpress Deployment
@@ -359,13 +352,10 @@ func (r *WordpressReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 		}
 	case "archived":
 		log.Info("State is currently: ARCHIVED")
-		*mysqlStatefulSet.Spec.Replicas = 0 //Set replicas of the MySQL Statefulset to 0
+		*mysqlStatefulSet.Spec.Replicas = 0
 		r.Update(ctx, mysqlStatefulSet)
-		*wordpressDeployment.Spec.Replicas = 0 //Set replicas of the Wordpress Deployment to 0
+		*wordpressDeployment.Spec.Replicas = 0
 		r.Update(ctx, wordpressDeployment)
-		*nfsDeployment.Spec.Replicas = 0 //Set replicas of the NFS Deployment to 0
-		r.Update(ctx, nfsDeployment)
-
 	}
 
 	// Update the URL status
@@ -417,7 +407,7 @@ func (r *WordpressReconciler) CreateMySQLConfigMap(w *wpv1alpha1.Wordpress) *cor
 			Name:      w.Name + "-mysql-configmap",
 			Namespace: w.Namespace,
 			Labels:    map[string]string{"app": "mysql"},
-		}, Data: map[string]string{"master.cnf": "[mysqld]\nlog-bin", "slave.cnf": "[mysqld]\nsuper-read-only"},
+		}, Data: map[string]string{"master.cnf": "[mysqld]\nlog-bin", "slave.cnf": "[mysqld]\nsuper-read-only"}, //Schrijffout bij slave -> ik had eerst Slafe *INsert facepalm*
 	}
 	ctrl.SetControllerReference(w, cm, r.Scheme)
 	return cm
@@ -495,7 +485,7 @@ if [[ -f xtrabackup_slave_info && "x$(<xtrabackup_slave_info)" != "x" ]]; then
 cat xtrabackup_slave_info | sed -E 's/;$//g' > change_master_to.sql.in
 rm -f xtrabackup_slave_info xtrabackup_binlog_info
 elif [[ -f xtrabackup_binlog_info ]]; then` +
-		"\n[[ `cat xtrabackup_binlog_info` =~ ^(.*?)[[:space:]]+(.*?)$ ]] || exit 1\n" +
+		"\n[[ `cat xtrabackup_binlog_info` =~ ^(.*?)[[:space:]]+(.*?)$ ]] || exit 1\n" + //Hier zit nen error
 		`rm -f xtrabackup_binlog_info xtrabackup_slave_info
     echo "CHANGE MASTER TO MASTER_LOG_FILE='${BASH_REMATCH[1]}',\
     	MASTER_LOG_POS=${BASH_REMATCH[2]}" > change_master_to.sql.in
@@ -525,9 +515,6 @@ elif [[ -f xtrabackup_binlog_info ]]; then` +
 			Namespace: w.Namespace,
 		},
 		Spec: appsv1.StatefulSetSpec{
-			UpdateStrategy: appsv1.StatefulSetUpdateStrategy{
-				Type: appsv1.RollingUpdateStatefulSetStrategyType,
-			},
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{"app": "mysql"},
 			},
@@ -688,7 +675,7 @@ func (r *WordpressReconciler) CreateWordpress(w *v1alpha1.Wordpress, s *corev1.S
 		},
 		Spec: appsv1.DeploymentSpec{
 			Strategy: appsv1.DeploymentStrategy{
-				Type: appsv1.RollingUpdateDeploymentStrategyType,
+				Type: appsv1.RecreateDeploymentStrategyType,
 			},
 			Replicas: &replicas,
 			Selector: &metav1.LabelSelector{
@@ -717,6 +704,7 @@ func (r *WordpressReconciler) CreateWordpress(w *v1alpha1.Wordpress, s *corev1.S
 										"bash",
 										"-c",
 										"wp core install --url=" + url + " --title=" + title + " --admin_user=" + admin + " --admin_email=" + adminEmail + " --admin_password=" + adminPass,
+										// ? Command might not work
 									},
 								},
 							},
@@ -752,9 +740,9 @@ func (r *WordpressReconciler) CreateIssuer(w *v1alpha1.Wordpress) *cert.Issuer {
 		Spec: cert.IssuerSpec{
 			IssuerConfig: cert.IssuerConfig{
 				ACME: &acme.ACMEIssuer{
-					Email: "yannick.luts@hotmail.com",
-					//Server: "https://acme-staging-v02.api.letsencrypt.org/directory", // INFO Staging Server, to test wether or not cert-manager is working
-					Server: "https://acme-v02.api.letsencrypt.org/directory", // INFO Production Server, This has rate limits.
+					Email:  "yannick.luts@hotmail.com",
+					Server: "https://acme-staging-v02.api.letsencrypt.org/directory", // INFO Staging Server, to test wether or not cert-manager is working
+					//Server: "https://acme-v02.api.letsencrypt.org/directory", // INFO Production Server, This has rate limits.
 					PrivateKey: certmetav1.SecretKeySelector{
 						LocalObjectReference: certmetav1.LocalObjectReference{
 							Name: "letsencrypt-staging",
@@ -884,9 +872,8 @@ func (r *WordpressReconciler) CreateNFSPersistentVolume(w *v1alpha1.Wordpress) *
 			StorageClassName: "",
 			PersistentVolumeSource: corev1.PersistentVolumeSource{
 				NFS: &corev1.NFSVolumeSource{
-					Server: w.Name + "-nfs-server." + w.Namespace + ".svc.cluster.local", // ! Not sure if this works
-					//Server: w.Name + "-nfs-server.default.svc.cluster.local", //Current namespace opvragen
-					Path: "/",
+					Server: w.Name + "-nfs-server." + w.Namespace + ".svc.cluster.local",
+					Path:   "/",
 				},
 			},
 		},

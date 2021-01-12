@@ -684,7 +684,7 @@ func (r *WordpressReconciler) CreateWordpress(w *v1alpha1.Wordpress, s *corev1.S
 		},
 		Spec: appsv1.DeploymentSpec{
 			Strategy: appsv1.DeploymentStrategy{
-				Type: appsv1.RecreateDeploymentStrategyType,
+				Type: appsv1.RollingUpdateDeploymentStrategyType,
 			},
 			Replicas: &replicas,
 			Selector: &metav1.LabelSelector{

@@ -60,10 +60,11 @@ var wpPassword, wpPasswordError = passGen.Generate(10, 4, 0, false, false)
 
 // +kubebuilder:rbac:groups=wp.gluo.be,resources=wordpresses,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=wp.gluo.be,resources=wordpresses/status,verbs=get;update;patch
-// ! BELANGRIJK Voeg perms Toe!!
-// +kubebuilder:rbac:groups=core/v1,resources=configmaps;services;persistentvolumes;persistentvolumeclaims,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=apps/v1,resources=statefulsets;deployments,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=cert-manager.io/v1,resources=issuers;certificates;clusterissuers,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=apps,resources=statefulsets;deployments,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=cert-manager.io,resources=issuers;certificates;clusterissuers,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=core,resources=services;configmaps;secrets;persistentvolumes;persistentvolumeclaims;pods,verbs=*
+// +kubebuilder:rbac:groups=networking.k8s.io,resources=ingresses;ingressclasses,verbs=create;list;update;patch;get;delete;watch
+// +kubebuilder:rbac:groups=apiregistration.k8s.io,resources=apiservices,verbs=get;list;watch;update
 
 func (r *WordpressReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
